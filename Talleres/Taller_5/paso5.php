@@ -73,10 +73,72 @@ echo "\nDatos actualizados de la tienda (JSON):\n$jsonActualizado\n";
 
 // TAREA: Implementa una función que genere un resumen de ventas
 // Crea un arreglo de ventas (producto_id, cliente_id, cantidad, fecha)
+
 // y genera un informe que muestre:
 // - Total de ventas
 // - Producto más vendido
 // - Cliente que más ha comprado
 // Tu código aquí
+$ventas = [
+    ["producto_id" => 1, "cliente_id" => 101, "cantidad" => 2, "fecha" => "2024-09-15"],
+    ["producto_id" => 2, "cliente_id" => 102, "cantidad" => 1, "fecha" => "2024-09-16"],
+    ["producto_id" => 3, "cliente_id" => 103, "cantidad" => 5, "fecha" => "2024-09-17"],
+    ["producto_id" => 1, "cliente_id" => 101, "cantidad" => 1, "fecha" => "2024-09-18"],
+    ["producto_id" => 4, "cliente_id" => 102, "cantidad" => 3, "fecha" => "2024-09-18"],
+    ["producto_id" => 5, "cliente_id" => 103, "cantidad" => 1, "fecha" => "2024-09-18"]
+];
+
+function generarInformeVentas($ventas, $productos, $clientes) {
+    $totalVentas = 0;
+    $ventasPorProducto = [];
+    $ventasPorCliente = [];
+
+    foreach ($ventas as $venta) {
+        // Calcular el total de ventas
+        $totalVentas += $venta['cantidad'];
+        
+        // Contar ventas por producto
+        if (!isset($ventasPorProducto[$venta['producto_id']])) {
+            $ventasPorProducto[$venta['producto_id']] = 0;
+        }
+        $ventasPorProducto[$venta['producto_id']] += $venta['cantidad'];
+        
+        // Contar ventas por cliente
+        if (!isset($ventasPorCliente[$venta['cliente_id']])) {
+            $ventasPorCliente[$venta['cliente_id']] = 0;
+        }
+        $ventasPorCliente[$venta['cliente_id']] += $venta['cantidad'];
+    }
+
+    // Encontrar el producto más vendido
+    $productoMasVendidoId = array_keys($ventasPorProducto, max($ventasPorProducto))[0];
+    $productoMasVendido = array_filter($productos, function($producto) use ($productoMasVendidoId) {
+        return $producto['id'] == $productoMasVendidoId;
+    });
+    $productoMasVendido = array_values($productoMasVendido)[0]; // Convertir a arreglo simple
+
+    // Encontrar el cliente que más ha comprado
+    $clienteMasCompradorId = array_keys($ventasPorCliente, max($ventasPorCliente))[0];
+    $clienteMasComprador = array_filter($clientes, function($cliente) use ($clienteMasCompradorId) {
+        return $cliente['id'] == $clienteMasCompradorId;
+    });
+    $clienteMasComprador = array_values($clienteMasComprador)[0]; // Convertir a arreglo simple
+
+    return [
+        'total_ventas' => $totalVentas,
+        'producto_mas_vendido' => $productoMasVendido,
+        'cliente_mas_comprador' => $clienteMasComprador
+    ];
+}
+
+
+$informeVentas = generarInformeVentas($ventas, $tiendaData['productos'], $tiendaData['clientes']);
+
+
+echo "\nInforme de Ventas:\n";
+echo "Total de ventas: {$informeVentas['total_ventas']}\n";
+echo "Producto más vendido: {$informeVentas['producto_mas_vendido']['nombre']} (ID: {$informeVentas['producto_mas_vendido']['id']})\n";
+echo "Cliente que más ha comprado: {$informeVentas['cliente_mas_comprador']['nombre']} (ID: {$informeVentas['cliente_mas_comprador']['id']})\n";
+?>
 
 ?>

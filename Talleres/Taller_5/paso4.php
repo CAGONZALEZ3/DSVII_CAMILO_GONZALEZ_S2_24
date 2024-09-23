@@ -129,10 +129,17 @@ function buscarLibros($biblioteca, $termino) {
 // número de libros por género, y el autor con más libros en la biblioteca
 function generarReporteBiblioteca($biblioteca) {
     // Tu código aquí
+    $termino = strtolower($termino);  // Convertir a minúsculas para hacer la búsqueda no sensible a mayúsculas/minúsculas
+    return array_filter($biblioteca, function($libro) use ($termino) {
+        // Verificar si el término está en el título o en el autor
+        return strpos(strtolower($libro['titulo']), $termino) !== false || 
+               strpos(strtolower($libro['autor']), $termino) !== false;
+    });
 }
 
 // Ejemplo de uso de la función de reporte (descomenta para probar)
-// echo "Reporte de la Biblioteca:\n";
-// print_r(generarReporteBiblioteca($biblioteca));
+$resultadosBusqueda = buscarLibros($biblioteca, "quijote");
+echo "Resultados de búsqueda para 'quijote':\n";
+imprimirBiblioteca($resultadosBusqueda);
 
 ?>

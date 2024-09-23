@@ -91,4 +91,32 @@ echo "\nRegión con mayores ventas totales: $regionTopVentas\n";
 // para cada producto en cada región. Identifica el producto y la región con mayor crecimiento.
 // Tu código aquí
 
+
+// Función para calcular el porcentaje de crecimiento
+function calcularCrecimiento($ventasInicio, $ventasFin) {
+    return (($ventasFin - $ventasInicio) / $ventasInicio) * 100;
+}
+
+function calcularMayorCrecimiento($ventasPorRegion) {
+    $mayorCrecimiento = null;
+    $productoMayorCrecimiento = "";
+    $regionMayorCrecimiento = "";
+
+    foreach ($ventasPorRegion as $region => $productos) {
+        foreach ($productos as $producto => $ventas) {
+            $crecimiento = (($ventas[count($ventas) - 1] - $ventas[0]) / $ventas[0]) * 100;
+
+            if ($mayorCrecimiento === null || $crecimiento > $mayorCrecimiento) {
+                $mayorCrecimiento = $crecimiento;
+                $productoMayorCrecimiento = $producto;
+                $regionMayorCrecimiento = $region;
+            }
+        }
+    }
+
+    // Retornar el resultado
+    return "El mayor crecimiento lo tuvo el producto '$productoMayorCrecimiento' en la región '$regionMayorCrecimiento' con un crecimiento de $mayorCrecimiento%.";
+}
+
+
 ?>

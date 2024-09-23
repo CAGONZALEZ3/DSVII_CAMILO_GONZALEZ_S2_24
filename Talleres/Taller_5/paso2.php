@@ -56,5 +56,24 @@ echo "\nValor total del inventario: $" . valorTotalInventario($inventario) . "\n
 // (cantidad * precio). Muestra el resultado.
 // Tu código aquí
 
+function productoMayorValor($inv) {
+    $productoMayor = null;
+    $mayorValor = 0;
+
+    foreach ($inv as $producto => $info) {
+        $valorTotalProducto = $info['cantidad'] * $info['precio'];
+        if ($valorTotalProducto > $mayorValor) {
+            $mayorValor = $valorTotalProducto;
+            $productoMayor = $producto;
+        }
+    }
+
+    return $productoMayor;
+}
+
+$productoMayorValor = productoMayorValor($inventario);
+echo "\nEl producto con mayor valor total en inventario es: $productoMayorValor\n";
+
+
 ?>
         

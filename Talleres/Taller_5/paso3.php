@@ -58,4 +58,14 @@ foreach ($conteoCalificaciones as $letra => $cantidad) {
 // (aquellos con un promedio de 90 o más).
 // Tu código aquí
 
+function estudiantesConTutoria($estudiantes) {
+    $necesitanTutoria = [];
+    foreach ($estudiantes as $estudiante) {
+        if ($estudiante["promedio"] < 71) {
+            $necesitanTutoria[] = $estudiante["nombre"];
+        }
+    }
+    return $necesitanTutoria;
+}
+
 ?>
