@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once 'clases.php';
+require_once 'Detalles.php';
 
 // Obtener la acción del query string, 'list' por defecto
 $action = isset($_GET['action']) ? $_GET['action'] : 'list';
@@ -106,6 +107,14 @@ if ($tareas === null) {
                     <option value="testing" <?php echo ($tareaEnEdicion && $tareaEnEdicion->tipo == 'testing') ? 'selected' : ''; ?>>Testing</option>
                 </select>
             </div>
+
+            <div class="col">
+                <input type="text"  class="form-control" name="DetallesEspecíficos" placeholder="Detalles Específicos" required>
+                    <?
+                    
+                    ?>
+            </div>
+
             <div class="col" id="campoEspecifico" style="display:none;">
                 <input type="text" class="form-control" id="campoDesarrollo" name="lenguajeProgramacion" placeholder="Lenguaje de Programación" style="display:none;">
                 <input type="text" class="form-control" id="campoDiseno" name="herramientaDiseno" placeholder="Herramienta de Diseño" style="display:none;">
@@ -137,6 +146,9 @@ if ($tareas === null) {
             <div class="col-auto">
                 <button type="submit" class="btn btn-primary">Filtrar</button>
             </div>
+               
+            
+
         </form>
 
         <!-- Tabla de tareas -->
