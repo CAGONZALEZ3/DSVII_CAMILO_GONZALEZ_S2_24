@@ -1,166 +1,191 @@
 <?php
-// Archivo: clases.php
-require_once 'Detalles.php';
 
-class Tarea  {
+
+interface Detalle {
+    public function obtenerDetallesEspecificos(): string;
+}
+
+
+abstract class Entrada implements Detalle {
     public $id;
-    public $titulo;
-    public $descripcion;
-    public $estado;
-    public $prioridad;
-    public $fechaCreacion;
+    public $fecha_creacion;
     public $tipo;
 
-    public function __construct($datos) {
-        foreach ($datos as $key => $value) {
-            $this->$key = $value;
-        }
+    public function __construct($id, $fecha_creacion, $tipo) {
+        $this->id = $id;
+        $this->fecha_creacion = $fecha_creacion;
+        $this->tipo = $tipo;
+    }
+
+    
+    abstract public function obtenerDetallesEspecificos(): string;
+}
+
+
+class EntradaUnaColumna extends Entrada {
+    public $titulo;
+    public $descripcion;
+
+    public function __construct($id, $fecha_creacion, $tipo, $titulo, $descripcion) {
+        parent::__construct($id, $fecha_creacion, $tipo);
+        $this->titulo = $titulo;
+        $this->descripcion = $descripcion;
+    }
+
+    public function obtenerDetallesEspecificos(): string {
+        return "Título: $this->titulo, Descripción: $this->descripcion";
     }
 }
 
 
-class GestorTareas
-{
-    private $tareas = [];
+class EntradaDosColumnas extends Entrada {
+    public $titulo1;
+    public $descripcion1;
+    public $titulo2;
+    public $descripcion2;
+
+    public function __construct($id, $fecha_creacion, $tipo, $titulo1, $descripcion1, $titulo2, $descripcion2) {
+        parent::__construct($id, $fecha_creacion, $tipo);
+        $this->titulo1 = $titulo1;
+        $this->descripcion1 = $descripcion1;
+        $this->titulo2 = $titulo2;
+        $this->descripcion2 = $descripcion2;
+    }
+
+
+    public function obtenerDetallesEspecificos(): string {
+        return "Columna 1 - Título: $this->titulo1, Descripción: $this->descripcion1; Columna 2 - Título: $this->titulo2, Descripción: $this->descripcion2";
+    }
+}
+
+
+class EntradaTresColumnas extends Entrada {
+    public $titulo1;
+    public $descripcion1;
+    public $titulo2;
+    public $descripcion2;
+    public $titulo3;
+    public $descripcion3;
+
+    public function __construct($id, $fecha_creacion, $tipo, $titulo1, $descripcion1, $titulo2, $descripcion2, $titulo3, $descripcion3) {
+        parent::__construct($id, $fecha_creacion, $tipo);
+        $this->titulo1 = $titulo1;
+        $this->descripcion1 = $descripcion1;
+        $this->titulo2 = $titulo2;
+        $this->descripcion2 = $descripcion2;
+        $this->titulo3 = $titulo3;
+        $this->descripcion3 = $descripcion3;
+    }
+
+    public function obtenerDetallesEspecificos(): string {
+        return "Columna 1 - Título: $this->titulo1, Descripción: $this->descripcion1; Columna 2 - Título: $this->titulo2, Descripción: $this->descripcion2; Columna 3 - Título: $this->titulo3, Descripción: $this->descripcion3";
+    }
+}
+
+
+class GestorBlog {
+    private $entradas = [];
+
 
     public function cargarTareas() {
-        $json = file_get_contents('tareas.json');
+        $json = file_get_contents('entradas.json');
         $data = json_decode($json, true);
-        foreach ($data as $tareaData) {
-            /* $tarea = new Tarea($tareaData);
-            $this->tareas[] = $tarea; */
-            switch ($tareaData['tipo']) {
-                case 'desarrollo':
-                    $tarea = new TareaDesarrollo($tareaData, $tareaData['lenguajeProgramacion']);
+
+        foreach ($data as $entradaData) {
+            switch ($entradaData['tipo']) {
+                case 1:
+                    $entrada = new EntradaUnaColumna(
+                        $entradaData['id'],
+                        $entradaData['fecha_creacion'],
+                        $entradaData['tipo'],
+                        $entradaData['titulo'],
+                        $entradaData['descripcion']
+                    );
                     break;
-                case 'diseno':
-                    $tarea = new TareaDiseno($tareaData, $tareaData['herramientaDiseno']);
+                case 2:
+                    $entrada = new EntradaDosColumnas(
+                        $entradaData['id'],
+                        $entradaData['fecha_creacion'],
+                        $entradaData['tipo'],
+                        $entradaData['titulo1'],
+                        $entradaData['descripcion1'],
+                        $entradaData['titulo2'],
+                        $entradaData['descripcion2']
+                    );
                     break;
-                case 'testing':
-                    $tarea = new TareaTesting($tareaData, $tareaData['tipoTest']);
+                case 3:
+                    $entrada = new EntradaTresColumnas(
+                        $entradaData['id'],
+                        $entradaData['fecha_creacion'],
+                        $entradaData['tipo'],
+                        $entradaData['titulo1'],
+                        $entradaData['descripcion1'],
+                        $entradaData['titulo2'],
+                        $entradaData['descripcion2'],
+                        $entradaData['titulo3'],
+                        $entradaData['descripcion3']
+                    );
                     break;
+                default:
+                    throw new Exception("Tipo de entrada desconocido");
             }
-            $this->tareas[] = $tarea;
+            $this->entradas[] = $entrada;
         }
         
-        return $this->tareas;
+        return $this->entradas;
     }
-    function nuevaTarea($titulo, $descripcion, $estado, $prioridad, $tipo, $tipoTest)
-    {
-        $this->cargarTareas();
-        $last_task = end($this->tareas);
-        $id = $last_task->id;
-        $new_id = $id + 1;
-        $nueva_tarea = [
-            "id" => $new_id,
-            "titulo" => $titulo,
-            "descripcion" => $descripcion,
-            "estado" => $estado,
-            "prioridad" => $prioridad,
-            "fechaCreacion" => date('Y-m-d H:i:s'),
-            "tipo" => $tipo,
-            "tipoTest" => $tipoTest
-        ];
-        return $nueva_tarea;
-    }
-    function agregarTarea($tarea)
-    {
-        $this->tareas[] = $tarea;
 
-        file_put_contents("tareas.json", json_encode($this->tareas));
+    public function agregarEntrada(Entrada $entrada) {
+        $this->entradas[] = $entrada;
     }
-    function eliminarTarea($id)
-    {
-        $this->cargarTareas();
-        $this->tareas = array_filter($this->tareas, function ($tarea) use ($id) {
-            return $tarea->id != $id;
+
+    public function editarEntrada(Entrada $entrada) {
+        foreach ($this->entradas as $key => $e) {
+            if ($e->id == $entrada->id) {
+                $this->entradas[$key] = $entrada;
+                break;
+            }
+        }
+    }
+
+    public function eliminarEntrada($id) {
+        $this->entradas = array_filter($this->entradas, function ($entrada) use ($id) {
+            return $entrada->id != $id;
         });
-        $this->tareas = array_values($this->tareas);
-        $this->agregarTarea($this->tareas);
-        // for ($i = 0; $i < count($this->tareas); $i++) {
-        // print_r($this->tareas[$i]);
-        // echo "<br>";
-        // }
-    }
-    function actualizarTarea($tarea) {}
-    function actualizarEstadoTarea($id, $nuevoEstado) {}
-    function buscarTareasPorEstado($estado) {}
-    function listarTareas($filtroEstado = '') {}
-}
-
-$gestor = new GestorTareas();
-$test = [];
-// $tarea = $gestor->nuevaTarea("test", "tarea de testing", "nueva", "1", "programacion", "test programatico");
-// $gestor->agregarTarea($tarea);
-$gestor->eliminarTarea(4);
-
-class TareaDesarrollo extends Tarea implements Detalles{ 
-    public $lenguajeProgramacion;
-
-    public function __construct($datos,$lenguajeProgramacion){
-        parent::__construct($datos);
-        $this->setlenguajeProgramacion($lenguajeProgramacion);
     }
 
-    public function getlenguajeProgramacion(){
-        return $this->lenguajeProgramacion;
+    public function obtenerEntrada($id) {
+        foreach ($this->entradas as $entrada) {
+            if ($entrada->id == $id) {
+                return $entrada;
+            }
+        }
+        return null;
     }
 
-    public function setlenguajeProgramacion($lenguajeProgramacion){
-        $this->lenguajeProgramacion= trim($lenguajeProgramacion);
-    }
+    public function moverEntrada($id, $direccion) {
+        $index = null;
+        foreach ($this->entradas as $key => $entrada) {
+            if ($entrada->id == $id) {
+                $index = $key;
+                break;
+            }
+        }
 
-    public function obtenerDetallesEspecificos(): string{
-        return $this->getlenguajeProgramacion();
-    }
-
-}
-
-class TareaDiseno extends Tarea implements Detalles{
-    public $herramientaDiseno;
-
-    public function __construct($datos,$herramientaDiseno){
-        parent::__construct($datos);
-        $this->setherramientaDiseno($herramientaDiseno);
-    }
-
-    public function getherramientaDiseno(){
-        return $this->herramientaDiseno;
-    }
-
-    public function setherramientaDiseno($herramientaDiseno){
-        $this->herramientaDiseno= trim($herramientaDiseno);
-    }
-
-    public function obtenerDetallesEspecificos(): string{
-        return $this->getherramientaDiseno();
+        if ($index !== null) {
+            if ($direccion === 'arriba' && $index > 0) {
+                $temp = $this->entradas[$index];
+                $this->entradas[$index] = $this->entradas[$index - 1];
+                $this->entradas[$index - 1] = $temp;
+            } elseif ($direccion === 'abajo' && $index < count($this->entradas) - 1) {
+                $temp = $this->entradas[$index];
+                $this->entradas[$index] = $this->entradas[$index + 1];
+                $this->entradas[$index + 1] = $temp;
+            }
+        }
     }
 }
 
-class TareaTesting extends tarea implements Detalles{
-    public $tipoTest;
 
-    public function __construct($datos,$tipoTest){
-        parent::__construct($datos);
-        $this->settipoTest($tipoTest);
-    }
-
-    public function gettipoTest(){
-        return $this->tipoTest;
-    }
-
-    public function settipoTest($tipoTest){
-        $this->tipoTest= trim($tipoTest);
-    }
-
-    public function obtenerDetallesEspecificos(): string{
-        return $this->gettipoTest();
-    }
-}
-
-// Implementar:
-// 1. La interfaz Detalle
-// 2. Modificar la clase Tarea para implementar la interfaz Detalle
-// 3. Las clases TareaDesarrollo, TareaDiseno y TareaTesting que hereden de Tarea
 
 ?>
