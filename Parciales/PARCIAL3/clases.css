@@ -1,0 +1,63 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+header {
+    background-color: #333;
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+}
+.container {
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    width: 80%;
+    margin: 5px;
+    overflow: hidden;
+    flex-direction: row;
+}
+.containerG {
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    flex-direction: column;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* Ensures borders are not doubled */
+}
+
+th, td {
+    border: 1px solid black; /* Adds border to table cells */
+    padding: 8px; /* Adds padding inside cells */
+    text-align: left; /* Aligns text to the left */
+}
+
+th {
+    background-color: #f2f2f2; /* Adds a background color to header cells */
+}
+
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
