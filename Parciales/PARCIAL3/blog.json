@@ -1,0 +1,22 @@
+[
+    {
+        "id":1,
+        "usuario":"camilocj3",
+        "nota":"85"
+    },
+    {
+        "id":2,
+        "usuario":"jose",
+        "nota":"85"
+    },
+    {
+        "id":3,
+        "usuario":"trejo",
+        "nota":"84"
+    },
+    {
+        "id":4,
+        "usuario":"lui",
+        "nota":"84"
+    }
+]

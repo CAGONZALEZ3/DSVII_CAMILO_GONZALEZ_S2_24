@@ -1,0 +1,32 @@
+[
+    {
+        "id":1,
+        "usuario":"camilocj3",
+        "password":"123456",
+        "rol":"ESTUDIANTE"
+    },
+    {
+        "id":2,
+        "usuario":"cgonzalez",
+        "password":"123456",
+        "rol":"PROFESOR"
+    },
+    {
+        "id":3,
+        "usuario":"jose",
+        "password":"123456",
+        "rol":"ESTUDIANTE"
+    },
+    {
+        "id":4,
+        "usuario":"trejo",
+        "password":"123456",
+        "rol":"ESTUDIANTE"
+    },
+    {
+        "id":5,
+        "usuario":"lui",
+        "password":"1234",
+        "rol":"ESTUDIANTE"
+    }
+]
